@@ -129,7 +129,8 @@ function initializeWhatsApp() {
 async function processChatbotResponse(phone, message) {
     try {
         // Fazer requisição para o PHP processar o chatbot
-        const response = await fetch('http://localhost/starflix/chatbot_processor.php', {
+        const fetch = require('node-fetch');
+        const response = await fetch('http://localhost/chatbot_processor.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone: phone, message: message })
@@ -137,10 +138,13 @@ async function processChatbotResponse(phone, message) {
         
         if (response.ok) {
             const data = await response.json();
+            console.log(`🤖 Resposta do chatbot para ${phone}:`, data);
             return data.response || '';
+        } else {
+            console.error('❌ Erro na resposta do chatbot:', response.status, response.statusText);
         }
     } catch (error) {
-        console.error('Erro ao processar chatbot:', error);
+        console.error('❌ Erro ao processar chatbot:', error);
     }
     return '';
 }
